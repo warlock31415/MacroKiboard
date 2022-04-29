@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+[dev-packages]
+"flake8" = ">=3.9.0"
+"flake8-commas" = "*"
+"flake8-comprehensions" = "*"
+"flake8-isort" = "*"
+"python-magic" = "*"
+adafruit-ampy = "*"
+ipdb = "*"
+ipython = "*"
+isort = "*"
+neovim = "*"
+s3cmd = "*"
+black = "==21.6b0"
+flake8-quotes = "*"
+flake8-black = "*"
