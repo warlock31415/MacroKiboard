@@ -16,8 +16,16 @@ from kmk.handlers.sequences import simple_key_sequence,send_string
 from kmk.modules.tapdance import TapDance
 from kmk.modules.mouse_keys import MouseKeys
 from kmk.modules.pimoroni_trackball import Trackball, TrackballMode
+from kmk.extensions.lock_status import LockStatus
 
 from ledDriver import LEDDriver
+from adafruit_hid.keycode import Keycode
+from adafruit_hid.keyboard import Keyboard
+import usb_hid
+
+kbd = Keyboard(usb_hid.devices)
+
+locks = LockStatus()
 
 i2c = busio.I2C(scl=board.GP21,sda=board.GP20)
 leds = LEDDriver(10,i2c)
@@ -43,8 +51,9 @@ keyboard.modules.append(tapdance)
 keyboard.modules.append(Layers())
 keyboard.modules.append(MouseKeys())
 
+keyboard.extensions.append(locks)
 
-trackball = Trackball(i2c, mode=TrackballMode.SCROLL_MODE)
+trackball = Trackball(i2c, mode=TrackballMode.MOUSE_MODE)
 keyboard.modules.append(trackball)
 
 
@@ -94,7 +103,11 @@ keyboard.keymap = [
     ],
 
     [
-        KC.NOP,         KC.NOP,           KC.NOP,               KC.NOP,             KC.TD(LAYERS[0],LAYERS[1])
+        KC.MUTE,        KC.NOP,           KC.NOP,               KC.NOP,             KC.TD(LAYERS[0],LAYERS[1]),
+	KC.VOLD,	KC.NOP,		  KC.NOP,		KC.NOP,		    KC.NOP,	
+	KC.VOLU,	KC.NOP,		  KC.NOP,		KC.NOP,		    KC.NOP,	
+	KC.MPLY,	KC.NOP,		  KC.NOP,		KC.NOP,		    KC.NOP,	
+	KC.CAPS,	KC.NOP,		  KC.NOP,		KC.NOP,		    KC.NOP,	
     ],
 ]
 
@@ -109,11 +122,10 @@ def change_layer(key, keyboard, *args):
     w = random.getrandbits(8)
 
     trackball.set_rgbw(r,g,b,w)
-    
 
 
-for layer in LAYERS:
-    layer.after_press_handler(change_layer)
+
+KC.CAPS.after_press_handler(get_caps_stat)
 
 if __name__ == '__main__':
     keyboard.go()
