@@ -116,14 +116,19 @@ def change_layer(key, keyboard, *args):
     current_layer = keyboard.active_layers[0]
     leds.set_output(current_layer,True)
 
-    r = random.getrandbits(8)
-    g = random.getrandbits(8)
-    b = random.getrandbits(8)
-    w = random.getrandbits(8)
-
-    trackball.set_rgbw(r,g,b,w)
 
 
+
+def get_caps_stat(key,keyboard,*args):
+    if locks.get_caps_lock():
+        trackball.set_rgbw(0,0,0,0)
+    else:
+        trackball.set_rgbw(0,0,0,255)
+    
+
+
+for layer in LAYERS:
+    layer.after_press_handler(change_layer)
 
 KC.CAPS.after_press_handler(get_caps_stat)
 
